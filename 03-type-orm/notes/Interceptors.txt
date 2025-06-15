@@ -1,0 +1,19 @@
+Interceptors are a powerful Aspect-Oriented Programming (AOP) feature in NestJS that allow you to:
+- Modify requests/responses before or after they reach handlers
+- Execute extra logic (logging, caching, transformations)
+- Override or extend default behavior
+
+Interceptors can mess around with incoming requests and/or outgoing responses. (Very similar to middlewares)
+We can apply interceptors:
+- either to individual route handlers.
+- to the entire controller.
+- globally.
+
+Built-in Interceptors in NestJS:
+- ClassSerializerInterceptor
+- TimeoutInterceptor
+
+Interceptors run in reverse order compared to middleware/guards:
+- Global interceptors (app-level)
+- Controller interceptors (@UseInterceptors on a controller)
+- Route interceptors (@UseInterceptors on a method)

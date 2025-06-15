@@ -1,0 +1,14 @@
+RxJS (Reactive Extensions for JavaScript) is a library for reactive programming using Observables.
+It helps manage asynchronous data streams (like HTTP requests, events, WebSocket messages) in a declarative way.
+ 
+Key Features:
+- Event Handling (clicks, API calls, timers)
+- Data Transformation (map, filter, merge)
+- Asynchronous Operations (HTTP requests, WebSockets)
+- Cancellation Support (unsubscribe from streams)
+
+What is an Observable?
+An Observable is a lazy data stream that can emit:
+- Values (numbers, objects, events)
+- Errors (if something fails)
+- Completion signals (when the stream ends)
