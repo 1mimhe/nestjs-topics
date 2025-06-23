@@ -4,6 +4,8 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
+// We have E2E (Integration) tests in this folder.
+
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
 

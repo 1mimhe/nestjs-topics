@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
+import { Report } from './reports/report.entity';
 
 // In NestJS, .forRoot() is a convention used by modules
 // to provide a way to configure global or singleton services when importing a module.
@@ -15,6 +17,23 @@ import { User } from './users/user.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // We do not have to re-import config module to all other modules.
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+    // With access to ConfigService through the dependency injection
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService], // ConfigService should have all our config info inside of it from our chosen file.
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Report],
+          synchronize: true,
+        };
+      },
+    }),
+    /*
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
@@ -25,6 +44,7 @@ import { User } from './users/user.entity';
       // If entities were changed, typeorm will automatically reflect those changes.
       // Otherwise, we would need to run a migration to apply entities (tables) updates manually.
     }),
+    */
     UsersModule,
     ReportsModule,
   ],
