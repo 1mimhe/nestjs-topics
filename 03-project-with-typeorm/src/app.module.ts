@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { Report } from './reports/report.entity';
+import { APP_PIPE } from '@nestjs/core';
 
 // In NestJS, .forRoot() is a convention used by modules
 // to provide a way to configure global or singleton services when importing a module.
@@ -36,7 +37,7 @@ import { Report } from './reports/report.entity';
     /*
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'db.sqlite',
+      database: 'db.sqlite', // process.env.NODE_ENV === 'test' ? 'test.sqlite' : 'db.sqlite'
       entities: [User],
       // entities: all the entities we want store in our application.
       synchronize: true,
@@ -49,6 +50,26 @@ import { Report } from './reports/report.entity';
     ReportsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Globally scoped pipes (applied to all incoming requests)
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  // Globally scoped middlewares (called automatically for all incoming requests)
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['asdfasfd'],
+        }),
+      )
+      .forRoutes('*');
+  }
+}

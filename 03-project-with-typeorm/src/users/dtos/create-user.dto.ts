@@ -4,7 +4,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  // @IsStrongPassword()
   @IsString()
   password: string;
 }
