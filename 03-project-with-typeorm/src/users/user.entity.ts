@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
-import { AfterInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Report } from "src/reports/report.entity";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 // First, we create our entity.
 // Then, we connect the entity to its parent module. This creates repository for us automatically.
@@ -17,10 +18,24 @@ export class User {
   @Exclude() // Rule: Removes this field from serialized responses
   password: string;
 
+  // Associations (Relations) in TypeOrm (More at report.entity.ts)
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
+
   // Hooks
   @AfterInsert()
   logInsert() {
-    console.log('Inserted user with id', this.id);
+    console.log('Inserted User with id', this.id);
+  }
+
+  @AfterUpdate()
+  logUpdate() {
+    console.log('Updated User with id', this.id);
+  }
+
+  @AfterRemove()
+  logRemove() {
+    console.log('Removed User with id', this.id);
   }
 }
 

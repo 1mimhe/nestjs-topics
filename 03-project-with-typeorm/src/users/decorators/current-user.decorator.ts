@@ -3,7 +3,7 @@ import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 // Custom param decorator
 export const CurrentUser = createParamDecorator(
   (data: never, context: ExecutionContext /* Http, Grpc,... */) => {
-    // data => the argument we pass to the decorator   => @CurrentUser(data)
+    // data => the argument we pass to the decorator => @CurrentUser(data)
     const request = context.switchToHttp().getRequest();
     return request.user;
   }

@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { Report } from './reports/report.entity';
 import { APP_PIPE } from '@nestjs/core';
+const cookieSession = require('cookie-session');
 
 // In NestJS, .forRoot() is a convention used by modules
 // to provide a way to configure global or singleton services when importing a module.
@@ -29,7 +30,8 @@ import { APP_PIPE } from '@nestjs/core';
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
+          // entities: [User, Report], // All entities must be explicitly listed here so the ORM manage them properly. Or:
+          autoLoadEntities: true,
           synchronize: true,
         };
       },

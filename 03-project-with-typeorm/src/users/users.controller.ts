@@ -8,6 +8,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ApiCreatedResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 // @Serialize(UserDto) => Applies to all handlers.
@@ -17,7 +18,19 @@ export class UsersController {
 
   // Custom interceptor
   // @UseInterceptors(new SerializeInterceptor(UserDto))
+  // @ApiBody({ type: CreateUserDto }) // make the class properties visible manually
   @Serialize(UserDto)
+  @ApiOperation({
+    summary: 'Sign up a user',
+    description: 'Creates a new user account with the provided information.'
+  })
+  @ApiCreatedResponse({
+    type: UserDto
+  })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'The email must be unique' 
+  })
   @Post('/signup')
   async signup(
     @Body() body: CreateUserDto,
@@ -63,6 +76,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  // @ApiQuery({ name: 'role', enum: UserRole }) // isArray: true => Multiselect
   @Get()
   getUsers(@Query('email') email: string) {
     return this.usersService.find(email);
